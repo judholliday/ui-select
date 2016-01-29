@@ -93,6 +93,9 @@ uis.controller('uiSelectCtrl',
       $scope.$broadcast('uis:activate');
 
       ctrl.open = true;
+      if(!ctrl.searchEnabled) {
+        angular.element(ctrl.searchInput[0]).addClass('ui-select-offscreen');
+      }
 
       ctrl.activeIndex = ctrl.activeIndex >= ctrl.items.length ? 0 : ctrl.activeIndex;
 
@@ -125,6 +128,10 @@ uis.controller('uiSelectCtrl',
     ctrl.searchInput[0].focus();
     if(!ctrl.tagging.isActivated && ctrl.items.length > 1) {
      _ensureHighlightVisible();
+    }
+    else if (ctrl.open && !ctrl.searchEnabled) {
+      // Close the selection if we don't have search enabled, and we click on the select again
+      ctrl.close();
     }
   };
 
@@ -366,6 +373,9 @@ uis.controller('uiSelectCtrl',
     if (ctrl.ngModel && ctrl.ngModel.$setTouched) ctrl.ngModel.$setTouched();
     _resetSearchInput();
     ctrl.open = false;
+    if(!ctrl.searchEnabled) {
+      angular.element(ctrl.searchInput[0]).removeClass('ui-select-offscreen');
+    }
 
     $scope.$broadcast('uis:close', skipFocusser);
 
